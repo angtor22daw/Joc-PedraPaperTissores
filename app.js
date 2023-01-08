@@ -9,18 +9,17 @@
  app.use(express.urlencoded({extended: true}));
  app.use(express.json()) // per analitzar les peticions HTTP que portin JSON al body
  
- let partides = [/*
-     {codiPartida:1},
-     {codiPartida:2, vicJug1:0, vicJug2:0},
-     {codiPartida:3, vicJug1:0, vicJug2:0}
-     */
- ];
+ let partides = [];
+
+ var contador=0;
+ var movJug1="";
+ var movJug2="";
 
  app.get('/', (req, res)=>res.send('hola'));
  
  app.post('/iniciarJoc/:codiPartida', (req, res)=>{
     console.log('req.body.codiPartida');
-    let partida={codiPartida: parseInt(req.body.codiPartida), vicJug1:0,vicJug2:0/*, nom: req.body.nom */};
+    let partida={codiPartida: parseInt(req.body.codiPartida), jugador:null , moviment:null ,torn:"jug1",vicJug1:0,vicJug2:0};
     partides.push(partida);
     res.send(partides);
 });
@@ -33,46 +32,61 @@
  });
 
  app.put('/moureJugador/codiPartida/jugador/tipusMoviment', (req, res)=>{
-    let nouAlumne={codi: parseInt(req.body.codi), nom: req.body.nom };
-    let alumne = alumnes.find(a =>a.codi===parseInt(req.params.codi));
-    let index =alumnes.indexOf(alumne);
-    alumnes[index]=nouAlumne; // Substitueix un alumne per altre
-    res.send();
-});
-/*
-app.put('/api/alumnes/:codi', (req, res)=>{
-    let nouAlumne={codi: parseInt(req.body.codi), nom: req.body.nom };
-    let alumne = alumnes.find(a =>a.codi===parseInt(req.params.codi));
-    let index =alumnes.indexOf(alumne);
-    alumnes[index]=nouAlumne; // Substitueix un alumne per altre
-    res.send();
-});
-*/
+    var partida = partides.find(a =>a.codiPartida===parseInt(req.body.codiPartida));
 
+    if(req.body.jugador == partida.torn){
+        partida.jugador=req.body.jugador;
+        partida.moviment=++contador;
 
- app.post('/api/alumnes', (req, res)=>{
-    console.log('req.body.codi');
-    let alumne={codi: parseInt(req.body.codi), nom: req.body.nom };
-    alumnes.push(alumne);
-    res.send(alumnes);
-});
-app.delete('/api/alumnes/:codi', (req, res)=>{
-    var alumne = alumnes.find(a =>a.codi===parseInt(req.params.codi));
-    var index =alumnes.indexOf(alumne); // indexOf et permet obtenir la posició d'un element dins d'una array
-    alumnes.splice(index, 1); // (index,1) -> index es la posició on es comença a eliminar i 1 es la QUANTITAT d'elements eliminats
-    res.send();
+        if(partida.torn=="jug1"){
+            movJug1=req.body.tipusMoviment;
+            partida.torn="jug2";
+        }else{
+            movJug2=req.body.tipusMoviment;
+            partida.torn="jug1";
+        }
+    }else{
+        res.status(404, 'No es el teu torn, espera a que l\'altre jugador faci el seu moviment');
+    }
+    if(contador==2){
+        contador=0;
+        if(movJug1=="pedra" && movJug2=="paper"){
+            partida.vicJug2++;
+        }else if(movJug1=="pedra" && movJug2=="tissores"){
+            partida.vicJug1++;
+        }else if(movJug1=="paper" && movJug2=="pedra"){
+            partida.vicJug1++;
+        }else if(movJug1=="paper" && movJug2=="tissores"){
+            partida.vicJug2++;
+        }else if(movJug1=="tissores" && movJug2=="pedra"){
+            partida.vicJug2++;
+        }else if(movJug1=="tissores" && movJug2=="paper"){
+            partida.vicJug1++;
+        }else{
+            movJug1="";
+            movJug2="";
+            partida.torn="jug1";
+            res.status(404, 'EMPAT - Torneu a jugar');
+        }
+    }
+    if(partida.vicJug1==3){
+        res.status(404, 'FELICITATS jugador 1, has guanyat');
+    }else if(partida.vicJug2==3){
+        res.status(404, 'FELICITATS jugador 2, has guanyat');
+    }
+
+    // console.log("movJug1: "+movJug1);
+    // console.log("movJug2: "+movJug2);
+    res.send(partida);
+
 });
 
- 
-app.get('/api/aprobats', (req, res)=>{
-    let aprobat = alumnes.find(a =>a.nota>=5);
-    if (!aprobat) res.status(404, 'error');
-    res.send(aprobat);
+app.delete('/acabarJoc/:codiPartida', (req, res)=>{
+    let partida = partides.find(a =>a.codiPartida===parseInt(req.params.codiPartida));
+    if (!partida) res.status(404, 'error');
+    let index =partides.indexOf(partida);
+    partides.splice(index, 1);
+    res.send(partides);
 });
-/* El usuaris tindran notes
-Afegirem 2 operacions
--Mostrar Aprobats 
--Mitjana de les notes
--Canviar les notes d'una nota per un altre
-*/
+
  app.listen(3000, ()=>console.log('inici servidor'));
