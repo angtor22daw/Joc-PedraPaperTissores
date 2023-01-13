@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    input[type="radio"] {
+        display: none;
+    }
+    input:checked + label img {
+        width: 20%;
+    }
+</style>
+<body>
+    <form action="app.php" method="post">
+        <div class="divForm">
+        <input type="radio" name="jugada" value="pedra" id="ped">
+        <label for="ped">
+        <img src="./img/piedra.png" width="17%">
+        </label>
+        <input type="radio" name="jugada" value="papel" id="pap">
+        <label for="pap">
+        <img src="./img/papel.jpg" width="13%">
+        </label>
+        <input type="radio" name="jugada" value="tisora" id="tis">
+        <label for="tis">
+        <img src="./img/tissores.jpg" width="10%">
+        </label>
+        <input type="submit" value="Jugar">
+        </div>    
+    </form>
+</body>
+</html>
