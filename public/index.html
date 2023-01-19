@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap">
+</head>
+<style>
+    input[name="jugador"] {
+        width: 30px;
+        height: 30px;
+        vertical-align: middle;
+
+    }
+    input[name="jugada"] {
+        display: none;
+    }
+
+    input[name="jugada"]:checked+label img {
+        width: 20%;
+    }
+
+    p {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+</style>
+
+<body>
+    <form action="app.php" method="post">
+        <p>Selecciona jugador: </p>
+        <div>
+            <input type="radio" name="jugador" value="jugador1"> Jugador 1
+            <input type="radio" name="jugador" value="jugador2"> Jugador 2
+        </div>
+
+        <p>Selecciona el teu moviment: </p>
+        <div>
+            <input type="radio" name="jugada" value="pedra" id="ped">
+            <label for="ped">
+                <img src="piedra.png" width="17%">
+            </label>
+            <input type="radio" name="jugada" value="papel" id="pap">
+            <label for="pap">
+                <img src="papel.jpg" width="13%">
+            </label>
+            <input type="radio" name="jugada" value="tisora" id="tis">
+            <label for="tis">
+                <img src="tissores.jpg" width="10%">
+            </label>
+            <br>
+            <input type="submit" value="Jugar">
+        </div>
+    </form>
+</body>
+
+</html>
