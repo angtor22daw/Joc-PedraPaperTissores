@@ -31,21 +31,8 @@
 </style>
 
 <body>
-    <form action="/iniciarJoc/codiPartida" method="post">
-        <h2>Crear nova partida: </h2>
-        <p>Codi partida:<input type="number" name="codiPartida"></p>
-        <br>
-        <input type="submit" value="Crear partida">
-    </form>
-    <br>
-    <br>
-    <form action="/partida.html" method="get">
-        <h2>Jugar partida: </h2>
-        <input type="submit" value="Jugar partida">
-    </form>
-
-<!-- 
-    <form action="/moureJugador/codiPartida/jugador/tipusMoviment" method="put">
+    <form action="/moureJugador/codiPartida/jugador/tipusMoviment" method="post">
+        <input type="hidden" name="_method" value="put" />
         <h2>Jugar partida: </h2>
         <p>Selecciona la partida: </p>
         <p>Codi partida:<input type="number" name="codiPartida"></p>
@@ -72,7 +59,7 @@
             <br>
             <input type="submit" value="Jugar">
         </div>
-    </form> -->
+    </form>
 </body>
 
 </html>

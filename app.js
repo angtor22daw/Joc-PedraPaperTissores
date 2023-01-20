@@ -38,7 +38,7 @@ app.post('/iniciarJoc/codiPartida', (req, res) => {
     }else{
         let partida = { codiPartida: parseInt(req.body.codiPartida), jugador: null, moviment: null, torn: "jug1", vicJug1: 0, vicJug2: 0 };
         partides.push(partida);
-        
+        res.redirect('/partida.html');
     }
     res.send(partides);
 });
