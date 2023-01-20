@@ -33,6 +33,8 @@ app.post('/iniciarJoc/codiPartida', (req, res) => {
     console.log('req.body.codiPartida');
     if (partides.find(a => a.codiPartida === parseInt(req.body.codiPartida))) {
         res.status(404, 'error');
+        res.send('Aquesta partida ja existeix!');
+        res.end();
     }else{
         let partida = { codiPartida: parseInt(req.body.codiPartida), jugador: null, moviment: null, torn: "jug1", vicJug1: 0, vicJug2: 0 };
         partides.push(partida);
