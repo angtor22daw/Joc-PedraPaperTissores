@@ -31,11 +31,18 @@
 </style>
 
 <body>
-    <form action="app.php" method="post">
+    <form action="/iniciarJoc/codiPartida" method="post">
+        <h2>Crear nova partida: </h2>
+        <p>Codi partida:<input type="number" name="codiPartida"></p>
+        <br>
+        <input type="submit" value="Crear partida">
+    </form>
+
+    <form action="/moureJugador/codiPartida/jugador/tipusMoviment" method="put">
         <p>Selecciona jugador: </p>
         <div>
-            <input type="radio" name="jugador" value="jugador1"> Jugador 1
-            <input type="radio" name="jugador" value="jugador2"> Jugador 2
+            <input type="radio" name="jugador" value="jug1"> Jugador 1
+            <input type="radio" name="jugador" value="jug2"> Jugador 2
         </div>
 
         <p>Selecciona el teu moviment: </p>
@@ -44,11 +51,11 @@
             <label for="ped">
                 <img src="piedra.png" width="17%">
             </label>
-            <input type="radio" name="jugada" value="papel" id="pap">
+            <input type="radio" name="jugada" value="paper" id="pap">
             <label for="pap">
                 <img src="papel.jpg" width="13%">
             </label>
-            <input type="radio" name="jugada" value="tisora" id="tis">
+            <input type="radio" name="jugada" value="tissores" id="tis">
             <label for="tis">
                 <img src="tissores.jpg" width="10%">
             </label>

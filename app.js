@@ -29,10 +29,15 @@ app.use(express.static('public'));
 
 app.get('/', (req, res) => res.send('hola'));
 
-app.post('/iniciarJoc/:codiPartida', (req, res) => {
+app.post('/iniciarJoc/codiPartida', (req, res) => {
     console.log('req.body.codiPartida');
-    let partida = { codiPartida: parseInt(req.body.codiPartida), jugador: null, moviment: null, torn: "jug1", vicJug1: 0, vicJug2: 0 };
-    partides.push(partida);
+    if (partides.find(a => a.codiPartida === parseInt(req.body.codiPartida))) {
+        res.status(404, 'error');
+    }else{
+        let partida = { codiPartida: parseInt(req.body.codiPartida), jugador: null, moviment: null, torn: "jug1", vicJug1: 0, vicJug2: 0 };
+        partides.push(partida);
+        
+    }
     res.send(partides);
 });
 
@@ -102,3 +107,6 @@ app.delete('/acabarJoc/:codiPartida', (req, res) => {
 });
 
 app.listen(3000, () => console.log('inici servidor'));
+//PARA JUGAR
+//http://localhost:3000/iniciarJoc/1
+
