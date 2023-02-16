@@ -36,13 +36,31 @@
         <input type="hidden" name="_method" value="put" />
         <h2>Jugar partida: </h2>
         <p>Selecciona la partida: </p>
-        <p>Codi partida:<input type="number" name="codiPartida"></p>
+        <p>Codi partida:<input type="number" name="codiPartidaMoviment" id="codiPartidaMoviment"></p>
         <p>Selecciona jugador: </p>
-        <p>jug:<input type="text" name="jugador"></p>
+        <div>
+            <input type="radio" name="jugador" value="jug1"> Jugador 1
+            <input type="radio" name="jugador" value="jug2"> Jugador 2
+        </div>
         <p>Selecciona el teu moviment: </p>
-        moviment:<input type="text" name="tipusMoviment">
 
-        <button type="button" onclick="tirarMoviment()">Llençar moviment</button>
+        <div>
+            <p>moviment:</p>
+            <input type="radio" name="jugada" value="pedra" id="ped" class="moviment">
+            <label for="ped">
+                <img src="piedra.png" width="17%">
+            </label>
+            <input type="radio" name="jugada" value="paper" id="pap" class="moviment">
+            <label for="pap">
+                <img src="papel.jpg" width="13%">
+            </label>
+            <input type="radio" name="jugada" value="tisores" id="tis" class="moviment">
+            <label for="tis">
+                <img src="tissores.jpg" width="10%">
+            </label>
+            <br>
+            <button type="button" onclick="tirarMoviment()">Llençar moviment</button>
+        </div>
     </form>
 </body>
 

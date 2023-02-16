@@ -1,6 +1,6 @@
 /**
  * Aplicació en ExpressJS que crea una API REST senzilla
- * @author 15584112.clot@fje.edu
+ * @authors 15584112.clot@fje.edu 15584150.clot@fje.edu
  * @version 2.0 10.10.21
  */
 const express = require('express'); // IMPORTAR BIBLIOTECA
@@ -58,7 +58,8 @@ app.put('/moureJugador/codiPartida/jugador/tipusMoviment', (req, res) => {
     if (req.body.jugador == partida.torn) {
         partida.jugador = req.body.jugador;
         // Per no veure el moviment del jugador i sumar +1 al contador
-        partida.moviment = ++contador;
+        partida.moviment = req.body.tipusMoviment;
+        ++contador;
 
         if (partida.torn == "jug1") {
             movJug1 = req.body.tipusMoviment;
