@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap">
+    <script src="consumidor.js"></script>
 </head>
 <style>
     input[name="jugador"] {
@@ -31,34 +32,17 @@
 </style>
 
 <body>
-    <form action="/moureJugador/codiPartida/jugador/tipusMoviment" method="post">
+    <form>
         <input type="hidden" name="_method" value="put" />
         <h2>Jugar partida: </h2>
         <p>Selecciona la partida: </p>
         <p>Codi partida:<input type="number" name="codiPartida"></p>
         <p>Selecciona jugador: </p>
-        <div>
-            <input type="radio" name="jugador" value="jug1"> Jugador 1
-            <input type="radio" name="jugador" value="jug2"> Jugador 2
-        </div>
-
+        <p>jug:<input type="text" name="jugador"></p>
         <p>Selecciona el teu moviment: </p>
-        <div>
-            <input type="radio" name="jugada" value="pedra" id="ped">
-            <label for="ped">
-                <img src="piedra.png" width="17%">
-            </label>
-            <input type="radio" name="jugada" value="paper" id="pap">
-            <label for="pap">
-                <img src="papel.jpg" width="13%">
-            </label>
-            <input type="radio" name="jugada" value="tissores" id="tis">
-            <label for="tis">
-                <img src="tissores.jpg" width="10%">
-            </label>
-            <br>
-            <input type="submit" value="Jugar">
-        </div>
+        moviment:<input type="text" name="tipusMoviment">
+
+        <button type="button" onclick="tirarMoviment()">Llençar moviment</button>
     </form>
 </body>
 

@@ -7,6 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap">
+    <script src="consumidor.js"></script>
+    <!-- <script type="text/javascript">
+        var xhr;
+
+        function inici() {
+            function deletePartida(codiPartida) {
+                var xhr = new XMLHttpRequest();
+                var formData = new FormData();
+                formData.append('codiPartida', codiPartida);
+
+                xhr.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log("Partida deleted successfully!");
+                    }
+                };
+
+                xhr.open("DELETE", "/acabarJoc/codiPartida", true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.send(JSON.stringify({ "codiPartida": codiPartida }));
+
+            }
+
+            // Example usage:
+            deletePartida(5); // Sends a DELETE request to "/acabarJoc", with the `codiPartida` value in the request body
+        }
+        window.addEventListener("load", inici, true);
+    </script> -->
 </head>
 <style>
     input[name="jugador"] {
@@ -15,6 +42,7 @@
         vertical-align: middle;
 
     }
+
     input[name="jugada"] {
         display: none;
     }
@@ -27,24 +55,41 @@
         font-size: 20px;
         font-weight: bold;
     }
-
 </style>
 
 <body>
-    <form action="/iniciarJoc/codiPartida" method="post">
+    <form>
         <h2>Crear nova partida: </h2>
-        <p>Codi partida:<input type="number" name="codiPartida"></p>
+        <p>Codi partida:<input type="number" name="codiPartida" id="codiPartida"></p>
         <br>
-        <input type="submit" value="Crear partida">
+        <button type="button" value="Crear partida" onclick="crearPartida()">Crear partida</button>
     </form>
-    <br>
+
     <br>
     <form action="/partida.html" method="get">
         <h2>Jugar partida: </h2>
         <input type="submit" value="Jugar partida">
     </form>
 
-<!-- 
+    <form action="/consultarEstatPartida/partides" method="get">
+        <h2>Veure partides: </h2>
+        <input type="submit" value="PARTIDES">
+    </form>
+
+    <!-- <form action="/consultarEstatPartida/" method="get">
+        <h2>Veure l'estat d'una partida: </h2>
+        <p>Codi partida:<input type="number" name="codiPartida"></p>
+        <br>
+        <input type="submit" value="Consultar partida">
+    </form> -->
+    <form>
+        <h2>Eliminar partida: </h2>
+        <p>Codi partida:<input type="number" name="codiPartida" id="codiAcabarPartida"></p>
+        <br>
+        <button type="button" onclick="deletePartida()">Eliminar partida</button>
+    </form>
+
+    <!-- 
     <form action="/moureJugador/codiPartida/jugador/tipusMoviment" method="put">
         <h2>Jugar partida: </h2>
         <p>Selecciona la partida: </p>
@@ -65,7 +110,7 @@
             <label for="pap">
                 <img src="papel.jpg" width="13%">
             </label>
-            <input type="radio" name="jugada" value="tissores" id="tis">
+            <input type="radio" name="jugada" value="tisores" id="tis">
             <label for="tis">
                 <img src="tissores.jpg" width="10%">
             </label>
