@@ -1,5 +1,5 @@
 /**
- * Aplicació en ExpressJS que crea una API REST senzilla
+ * AplicaciÃ³ en ExpressJS que crea una API REST senzilla
  * @authors 15584112.clot@fje.edu 15584150.clot@fje.edu
  * @version 2.0 10.10.21
  */
@@ -30,97 +30,193 @@ app.use(express.static('public'));
 app.get('/', (req, res) => res.send('hola'));
 
 app.post('/iniciarJoc/codiPartida', (req, res) => {
-    console.log('req.body.codiPartida');
-    if (partides.find(a => a.codiPartida === parseInt(req.body.codiPartida))) {
-        res.status(404, 'error');
-        res.send('La partida amb el codi'+ codiPartida +' ja existeix!');
-        res.end();
-    }else{
-        let numPartida = parseInt(req.body.codiPartida);
-        let partida = { codiPartida: numPartida, jugador: null, moviment: null, torn: "jug1", vicJug1: 0, vicJug2: 0 };
-        // console.log(partida);
-        partides.push(partida);
-        // res.redirect('/partida.html');
+    let comprovar = true;
+
+    for (let index = 0; index < partides.length; index++) {
+        if (partides[index].codiPartida == req.body.codiPartida) {
+            res.status(404, 'error');
+            res.send('La partida amb el codi' + req.body.codiPartida + ' ja existeix!');
+            res.end();
+            comprovar = false;
+        }
     }
-    res.send(partides);
+    if (comprovar) {
+        let partida = new Partida(req.body.codiPartida, "", "", "jug1", 0, 0);
+        partides.push(partida);
+        res.send(partides);
+    }
+
 });
+
 
 app.get('/consultarEstatPartida/partides', (req, res) => res.send(partides));
 app.get('/consultarEstatPartida/:codiPartida', (req, res) => {
-    let partida = partides.find(a => a.codiPartida === parseInt(req.params.codiPartida));
-    if (!partida) res.status(404, 'error');
-    res.send(partida);
+    let comprovar = true;
+    for (let index = 0; index < partides.length; index++) {
+        if (partides[index].codiPartida == req.body.codiPartida) {
+            res.send(partides[index]);
+            comprovar = false;
+        }
+    }
+    if (comprovar) {
+        res.status(404, 'error');
+        res.send('La partida amb el codi ' + req.body.codiPartida + ' no existeix!');
+        res.end();
+    }
 });
 
 app.put('/moureJugador/codiPartida/jugador/tipusMoviment', (req, res) => {
-    var partida = partides.find(a => a.codiPartida === parseInt(req.body.codiPartida));
+    if (req.body.tipusMoviment != "pedra" && req.body.tipusMoviment != "paper" && req.body.tipusMoviment != "tisores") {
+        res.status(404, 'error');
+        res.send('El moviment no es correcte!');
+        res.end();
+    }
 
-    if (req.body.jugador == partida.torn) {
-        partida.jugador = req.body.jugador;
-        // Per no veure el moviment del jugador i sumar +1 al contador
-        partida.moviment = req.body.tipusMoviment;
-        ++contador;
+    let missatge = "";
 
-        if (partida.torn == "jug1") {
-            movJug1 = req.body.tipusMoviment;
-            partida.torn = "jug2";
-        } else {
-            movJug2 = req.body.tipusMoviment;
-            partida.torn = "jug1";
+    let comprovar = true;
+    for (let index = 0; index < partides.length; index++) {
+        if (partides[index].codiPartida == req.body.codiPartida) {
+            if (partides[index].torn == req.body.jugador) {
+                if (req.body.jugador == "jug1") {
+                    partides[index].torn = "jug2";
+                    contador++;
+                    movJug1 = req.body.tipusMoviment;
+                } else if (req.body.jugador == "jug2") {
+                    partides[index].torn = "jug1";
+                    contador++;
+                    movJug2 = req.body.tipusMoviment;
+                }
+                comprovar = false;
+            } else {
+                res.status(404, 'error');
+                res.send('No es el torn del jugador ' + req.body.jugador);
+                res.end();
+                comprovar = false;
+            }
         }
-    } else {
-        res.status(200, 'No es el teu torn, espera a que l\'altre jugador faci el seu moviment');
-    }
-    if (contador == 2) {
-        contador = 0;
-        if (movJug1 == "pedra" && movJug2 == "paper") {
-            partida.vicJug2++;
-        } else if (movJug1 == "pedra" && movJug2 == "tisores") {
-            partida.vicJug1++;
-        } else if (movJug1 == "paper" && movJug2 == "pedra") {
-            partida.vicJug1++;
-        } else if (movJug1 == "paper" && movJug2 == "tisores") {
-            partida.vicJug2++;
-        } else if (movJug1 == "tisores" && movJug2 == "pedra") {
-            partida.vicJug2++;
-        } else if (movJug1 == "tisores" && movJug2 == "paper") {
-            partida.vicJug1++;
-        } else {
-            movJug1 = "";
-            movJug2 = "";
-            partida.torn = "jug1";
-            res.status(200, 'EMPAT - Torneu a jugar');
+
+        if (contador == 2) {
+            contador = 0;
+            if (movJug1 == "paper" && movJug2 == "pedra") {
+                missatge = 'El jugador 1 ha escollit PAPER, el Jugador 2 PEDRA. El Jugador 1 ha guanyat aquesta ronda.';
+                partides[index].vicJug1++;
+            } else if (movJug1 == "pedra" && movJug2 == "tisores") {
+                missatge = "El jugador 1 ha escollit PEDRA, el Jugador 2 tisores. El Jugador 1 ha guanyat aquesta ronda.";
+                partides[index].vicJug1++;
+            } else if (movJug1 == "tisores" && movJug2 == "paper") {
+                missatge = "El jugador 1 ha escollit tisores, el Jugador 2 PAPER. El Jugador 1 ha guanyat aquesta ronda.";
+                partides[index].vicJug1++;
+            } else if (movJug1 == "pedra" && movJug2 == "paper") {
+                missatge = "El jugador 1 ha escollit PEDRA, el Jugador 2 PAPER. El Jugador 2 ha guanyat aquesta ronda.";
+                partides[index].vicJug2++;
+            } else if (movJug1 == "tisores" && movJug2 == "pedra") {
+                missatge = "El jugador 1 ha escollit tisores, el Jugador 2 PEDRA. El Jugador 2 ha guanyat aquesta ronda.";
+                partides[index].vicJug2++;
+            } else if (movJug1 == "paper" && movJug2 == "tisores") {
+                missatge = "El jugador 1 ha escollit PAPER, el Jugador 2 tisores. El Jugador 2 ha guanyat aquesta ronda.";
+                partides[index].vicJug2++;
+            }else if (movJug1 == movJug2) {
+                partides[index].torn = "jug1";
+                missatge = "Els dos jugadors heu escollit " + movJug1 + ". Es un EMPAT!";
+            }
+        }
+        if (partides[index].vicJug1 == 3) {
+            res.send(missatge + '\nFELICITATS JUGADOR 1 HAS GUANYAT LA PARTIDA!');
+        } else if (partides[index].vicJug2 == 3) {
+            res.send(missatge + '\nFELICITATS JUGADOR 2 HAS GUANYAT LA PARTIDA!');
+        } else if (contador == 0){
+            res.send(missatge);
+        }else {
+            res.send('El jugador  ' + partides[index].torn + ' ha de fer el seu moviment');
         }
     }
-    if (partida.vicJug1 == 3) {
-        res.status(200, 'FELICITATS jugador 1, has guanyat');
-    } else if (partida.vicJug2 == 3) {
-        res.status(200, 'FELICITATS jugador 2, has guanyat');
-    }else{
-        res.status(200, partida.torn+' es el teu torn.');
+
+
+
+    if (comprovar) {
+        res.status(404, 'error');
+        res.send('La partida amb el codi ' + req.body.codiPartida + ' no existeix!');
+        res.end();
     }
 
-    // console.log("movJug1: "+movJug1);
-    // console.log("movJug2: "+movJug2);
     res.send(partida);
-
 });
 
 app.delete('/acabarJoc/codiPartida', (req, res) => {
-
-    let partida = partides.find(a => a.codiPartida === parseInt(req.body.codiPartida));
-    // if (!partida) res.status(404, 'error');
-    let index = partides.indexOf(partida);
-    if (index >= 0) {
-        // partides.remove(pos);
-        partides.splice(index, 1);
-        res.send("Partida amb el codi " + req.body.codiPartida + " eliminada!");
-    } else {
-        res.send("La partida amb el codi " + req.body.codiPartida + " no existeix!");
+    let comprovar = true;
+    for (let index = 0; index < partides.length; index++) {
+        if (partides[index].codiPartida == req.body.codiPartida) {
+            res.status(404, 'error');
+            partides.splice(index, 1);
+            res.send("Partida amb el codi " + req.body.codiPartida + " eliminada!");
+            res.end();
+            comprovar = false;
+        }
     }
-    
-    
+    if (comprovar) {
+        res.send('La partida amb el codi ' + req.body.codiPartida + ' no existeix!');
+    }
+
+
 });
 
+
 app.listen(3000, () => console.log('inici servidor'));
+
+class Partida {
+
+    constructor(codiPartida, jugador, moviment, torn, vicJug1, vicJug2) {
+        this.codiPartida = codiPartida;
+        this.jugador = jugador;
+        this.moviment = moviment;
+        this.torn = "jug1";
+        this.vicJug1 = vicJug1;
+        this.vicJug2 = vicJug2;
+    }
+    getCodiPartida() {
+        return this.codiPartida;
+    }
+    setCodiPartida(codiPartida) {
+        this.codiPartida = codiPartida;
+    }
+    getJugador() {
+        return this.jugador;
+    }
+    setJugador(jugador) {
+        this.jugador = jugador;
+    }
+    getMoviment() {
+        return this.moviment;
+    }
+    setMoviment(moviment) {
+        this.moviment = moviment;
+    }
+    getTorn() {
+        return this.torn;
+    }
+    setTorn(torn) {
+        this.torn = torn;
+    }
+    getVicJug1() {
+        return this.vicJug1;
+    }
+    setVicJug1(vicJug1) {
+        this.vicJug1 = vicJug1;
+    }
+    getVicJug2() {
+        return this.vicJug2;
+    }
+    setVicJug2(vicJug2) {
+        this.vicJug2 = vicJug2;
+    }
+
+    getPartida() {
+        return this.codiPartida + " " + this.jugador + " " + this.moviment + " " + this.torn + " " + this.vicJug1 + " " + this.vicJug2;
+    }
+
+    toString() {
+        return "Partida{" + "codiPartida=" + codiPartida + ", jugador=" + jugador + ", moviment=" + moviment + ", torn=" + torn + ", vicJug1=" + vicJug1 + ", vicJug2=" + vicJug2 + '}';
+    }
+}
 
