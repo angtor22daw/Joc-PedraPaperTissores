@@ -5,6 +5,13 @@ function crearPartida() {
     xhr.open("POST", "/iniciarJoc/codiPartida", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({ "codiPartida": document.getElementById("codiPartida").value }));
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log("Partida created successfully!");
+            document.getElementById("partidaCreada").innerHTML = this.responseText;
+        }
+    };
+
 }
 
 function tirarMoviment() {
@@ -30,6 +37,7 @@ function tirarMoviment() {
     xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             console.log("Moviment tirat successfully!");
+            document.getElementById("resultat").innerHTML = this.responseText;
         }
     };
 
@@ -46,14 +54,14 @@ function deletePartida() {
     var xhr = new XMLHttpRequest();
     var formData = new FormData();
     formData.append('codiPartida', document.getElementById("codiAcabarPartida").value);
-    xhr.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log("Partida deleted successfully!");
-        }
-    };
 
     xhr.open("DELETE", "/acabarJoc/codiPartida", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify({ "codiPartida": document.getElementById("codiAcabarPartida").value }));
-
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log("Partida deleted successfully!");
+            document.getElementById("partidaEliminada").innerHTML = this.responseText;
+        }
+    };
 }

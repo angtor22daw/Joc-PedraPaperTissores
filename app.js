@@ -34,7 +34,7 @@ app.post('/iniciarJoc/codiPartida', (req, res) => {
 
     for (let index = 0; index < partides.length; index++) {
         if (partides[index].codiPartida == req.body.codiPartida) {
-            res.status(404, 'error');
+            res.status(200, 'error');
             res.send('La partida amb el codi' + req.body.codiPartida + ' ja existeix!');
             res.end();
             comprovar = false;
@@ -43,7 +43,7 @@ app.post('/iniciarJoc/codiPartida', (req, res) => {
     if (comprovar) {
         let partida = new Partida(req.body.codiPartida, "", "", "jug1", 0, 0);
         partides.push(partida);
-        res.send(partides);
+        res.send("La partida amb el codi "+ req.body.codiPartida +" ha estat creada!");
     }
 
 });
@@ -59,7 +59,7 @@ app.get('/consultarEstatPartida/:codiPartida', (req, res) => {
         }
     }
     if (comprovar) {
-        res.status(404, 'error');
+        res.status(200, 'error');
         res.send('La partida amb el codi ' + req.body.codiPartida + ' no existeix!');
         res.end();
     }
@@ -89,10 +89,10 @@ app.put('/moureJugador/codiPartida/jugador/tipusMoviment', (req, res) => {
                 }
                 comprovar = false;
             } else {
-                res.status(404, 'error');
-                res.send('No es el torn del jugador ' + req.body.jugador);
-                res.end();
                 comprovar = false;
+                res.status(200, 'error');
+                res.send('No es el torn del jugador ' + req.body.jugador);
+                res.end();   
             }
         }
 
@@ -132,10 +132,8 @@ app.put('/moureJugador/codiPartida/jugador/tipusMoviment', (req, res) => {
         }
     }
 
-
-
     if (comprovar) {
-        res.status(404, 'error');
+        res.status(200, 'error');
         res.send('La partida amb el codi ' + req.body.codiPartida + ' no existeix!');
         res.end();
     }
@@ -147,7 +145,7 @@ app.delete('/acabarJoc/codiPartida', (req, res) => {
     let comprovar = true;
     for (let index = 0; index < partides.length; index++) {
         if (partides[index].codiPartida == req.body.codiPartida) {
-            res.status(404, 'error');
+            res.status(200, 'error');
             partides.splice(index, 1);
             res.send("Partida amb el codi " + req.body.codiPartida + " eliminada!");
             res.end();
